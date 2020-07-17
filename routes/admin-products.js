@@ -4,28 +4,38 @@ const Product = require('../models/product')
 var mkdirp = require("mkdirp")
 var fs = require('fs-extra')
 var resize = require("resize-img")
+var Category = require('../models/category') ;
+
+
 
 router.get('/' , (req,res)=>{
-    res.send('hi')
-    // Page.find({}).sort({sorting:1}).exec(function (err,pages) {
-    //     res.render('admin/pages' , {
-    //         pages:pages
+    var count ;
+    Product.countDocuments(function(err , c) {
+        count = c ;
+    })
+    Product.find(function(err , products) {
+        res.render('admin/products' , {
+           products: products ,
+           count: count  
+        })
+    })
 
-    //     })
-        
-    // })
 })
 // Get add-page
-router.get('/add-page' , (req,res)=>{
+router.get('/add-product' , (req,res)=>{
     var title = "" ;
-    var slug = "" ;
-    var content = "";
+    var desc = "";
+    var price = "" ;
+    Category.find(function(err , categories) {
+        res.render('admin/add-product' , {
+            title:title,
+            categories:categories  ,
+            desc:desc,
+            price:price 
+        })
+        
+    })
     
-res.render('admin/add-page' , {
-    title:title,
-    slug:slug,
-    content:content
-})
 
 })
 
