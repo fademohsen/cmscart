@@ -21,7 +21,7 @@ const Product = new mongosse.Schema({
         required:true
 
     },
-    image:{
+    img:{
         type:String
     },
 })

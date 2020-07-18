@@ -1,6 +1,5 @@
 
 <%- include('../_layouts/adminheader'); %>
-<div>
 <%- messages('messages', locals) %>
 <% if( typeof(errors) !="undefined"){%>
 <% if(errors){ %>
@@ -14,12 +13,11 @@
   <%})}%>
 
   <%}%>
-</div>
-<h2 class="page-title">Add a Product</h2>
-<a href="/admin/products" class="btn btn-primary">Back to all pages</a>
+<h2 class="page-title">Add a product</h2>
+<a href="/admin/products" class="btn btn-primary">Back to all products</a>
 <br><br>
 
-<form  action="/admin/products/add-product" method="POST" enctype="multipart/form-data">
+<form  action="/admin/products/add-product" method="POST">
     
     <div class="form-group">
         <label for="">Title</label>
@@ -27,13 +25,13 @@
     </div>
     <div class="form-group">
         <label for="">Description</label>
-        <textarea name="desc" class="form-control" cols="30" rows="10" placeholder="Description"><%= desc %></textarea>
+        <textarea name="desc" class="form-control"cols="30" rows="10" placeholder="Description"><%= desc %></textarea>
     </div>
     <div class="form-group">
         <label for="">Category</label>
         <select name="category" class="form-control">
-            <% categories.forEach(function (cat){ %>
-                <option value="<%= cat.slug %>"><%= cat.title %> </option>
+            <% categories.forEach(category => { %>
+                <option value="<%= category.slug %>"><%= category.title %> </option>
              
             <% }) %>
         </select>
@@ -42,36 +40,32 @@
         <label for="">Price</label>
         <input type="text" class="form-control" name="price" value="<%= price %>" placeholder="Price">
     </div>
-    
     <div class="form-group">
         <label for="">Image</label>
-        <input type="file" class="form-control" name="image" id="img">
-        <img src="#" id="imgPreview" alt="">
+        <input type="file" accept="image/*" name="img" onchange="loadFile(event)">
+        <img src="#"  id="imgPreview">
+        <script>
+            const loadFile = function(event) {
+              const output = document.getElementById('imgPreview');
+              output.src = URL.createObjectURL(event.target.files[0]);
+              
+              output.onload = function() {
+                URL.revokeObjectURL(output.src) // free memory
+                console.log(output.src);
+                output.style.width = '100px'
+              }
+            };
+          </script>
+          
+       
     </div>
     
-    
+   
     
     <button class="btn btn-default">Submit</button>
 </form>
-<script>
-function readURL(input) {
-
-    if (input.files && input.files[0]) {
-        var reader = new FileReader() ;
-
-        reader.onload = function(e) {
-            $("#imgPreview").attr('src', e.target.result).width(100).height(100);
-        }
-        reader.readAsDataURL(input.files[0]) ;
+</div>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
 
 
-    }
-    
-}
-$("#img").change(function(){
-    readURL(this);
-})
-
-
-</script>
 <%- include('../_layouts/adminfooter'); %>

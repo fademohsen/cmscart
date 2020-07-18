@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const config = require('./config/db')
 const session = require('express-session');
 mongoose.connect(config.dbKey, {useNewUrlParser: true , useUnifiedTopology: true} );
-const fileUpload = require('express-fileupload')
+const filesUploader = require('express-fileupload');
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -14,7 +14,8 @@ db.once('open', function() {
 });
 const app = express()
 
-app.use(express.static(path.join(__dirname,'public')))
+app.use(express.static('public'))
+app.use(filesUploader())
 app.use(express.urlencoded({extended:true}))
 app.set('view engine' , 'ejs')
 
@@ -27,6 +28,7 @@ app.use(session({
     saveUninitialized: true,
     // cookie: { secure: true }
   }))
+ 
 
   // setup messages
 app.use(require('connect-flash')());
@@ -34,7 +36,6 @@ app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
-app.use(fileUpload());
   //Routes
 app.use('/admin/categories' , require('./routes/admin-category'))
 app.use('/admin/pages' , require('./routes/admin-pages'))
