@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const config = require('./config/db')
 const session = require('express-session');
 mongoose.connect(config.dbKey, {useNewUrlParser: true , useUnifiedTopology: true} );
-const filesUploader = require('express-fileupload');
-
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -15,11 +13,27 @@ db.once('open', function() {
 const app = express()
 
 app.use(express.static('public'))
-app.use(filesUploader())
+app.use( require('express-fileupload')())
+
+app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.set('view engine' , 'ejs')
-
-
+//get Page Model
+var Page = require('./models/Page');
+var Category = require('./models/category')
+//get all pages to pass to header.ejs
+Page.find({}).sort({sorting:1}).exec(function (err,pages) {
+  if(err) {
+    console.log(err);
+  } else {
+    app.locals.pages = pages ;
+  }
+  
+})
+//get all categories 
+Category.find((err , categoryData)=>{
+  app.locals.categories = categoryData
+})
 // setup sessions 
 
 app.use(session({
@@ -37,6 +51,7 @@ app.use(function (req, res, next) {
   next();
 });
   //Routes
+app.use('/products' , require('./routes/all_products'))
 app.use('/admin/categories' , require('./routes/admin-category'))
 app.use('/admin/pages' , require('./routes/admin-pages'))
 app.use('/' , require('./routes/pages'))

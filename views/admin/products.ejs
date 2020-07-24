@@ -24,14 +24,14 @@
                 <td>$<%= parseFloat(product.price).toFixed(2)%></td>
                 <td><%= product.category%></td>
                 <td>
-                    <%  if (product.image == "") { %>
-                        <img src="/images/noimage.png" alt="">
+                    <%  if (product.img == "") { %>
+                        <img src="/images/noimage.png" style="width: 60px;" alt="">
                         <% } else {%>
-                        <img src="/product_images/<%= product._id %>/<%= product.image %>" alt="">
+                        <img src="/product_images/<%= product._id %>/<%= product.img %>" style="width: 60px;" alt="">
                             <% } %>
                 </td>
                 <td><a href="/admin/products/edit-product/<%= product._id %>">Edit</a></td>
-                <td><a class="confirmDeletion" href="/admin/products/product-page/<%= product._id %>">Delete</a></td>
+                <td><a class="confirmDeletion" href="/admin/products/delete-product/<%= product._id %>">Delete</a></td>
                 <%}) %>
             </tr>
     </tbody>

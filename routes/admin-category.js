@@ -2,13 +2,15 @@ const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 const Category = require('../models/category')
 
+
+let loadData = (data , req)=>{
+    req.app.locals.categories = data
+}
 router.get('/' , (req,res)=>{
     Category.find(function (err , categories) {
         if (err) return console.log(err);
-        res.render('admin/category', {
-            category : categories
-
-        })
+        res.render('admin/category', {category : categories})
+        loadData(categories , req)
         
         
     }) 

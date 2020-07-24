@@ -1,13 +1,22 @@
 const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 const Page = require('../models/Page')
+
+
+let loadData = (data , req) =>{
+    req.app.locals.pages = data ;
+}
 router.get('/' , (req,res)=>{
-    Page.find({}).sort({sorting:1}).exec(function (err,pages) {
-        res.render('admin/pages' , {
-            pages:pages
+    Page.find({}, (err, found) => {
+
+        if (err) console.log(err);
+        let sortingArray = found.sort((a, b) => { return a.sorting - b.sorting })
+
+        res.render('admin/pages', {
+            pages: sortingArray,
 
         })
-        
+        loadData( found , req)
     })
 })
 // Get add-page
@@ -82,9 +91,15 @@ router.post('/add-page' , [
                 if (err) return console.log(err);
                 page.sorting = index+1
                 page.save(err => {
-                    if (err)
-                    console.log(err);
-                    
+                    index++ 
+                    if(index >= ids.length) {
+                        Page.find().then((data) => {
+                        loadData(data, req)
+                        console.log('----------');
+                        res.redirect('/admin/pages')
+                        })
+                    }
+                  
                 })
                 
             })
