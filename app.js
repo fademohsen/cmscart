@@ -30,6 +30,7 @@ Page.find({}).sort({sorting:1}).exec(function (err,pages) {
   }
   
 })
+
 //get all categories 
 Category.find((err , categoryData)=>{
   app.locals.categories = categoryData
@@ -42,7 +43,12 @@ app.use(session({
     saveUninitialized: true,
     // cookie: { secure: true }
   }))
- 
+  app.get('*' , function(req ,res , next) {
+    res.locals.cart = req.session.cart ;
+    next() ;
+    
+  })
+  
 
   // setup messages
 app.use(require('connect-flash')());
@@ -52,6 +58,7 @@ app.use(function (req, res, next) {
 });
   //Routes
 app.use('/products' , require('./routes/all_products'))
+app.use('/cart' , require('./routes/cart'))
 app.use('/admin/categories' , require('./routes/admin-category'))
 app.use('/admin/pages' , require('./routes/admin-pages'))
 app.use('/' , require('./routes/pages'))

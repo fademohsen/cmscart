@@ -22,7 +22,6 @@ router.get('/:category', function (req, res) {
 
         
         Products.find({category:categorySlug.toLowerCase()} ,function (err, products) {
-            console.log(products);
             if (err)
                 console.log(err);
 
