@@ -48,4 +48,11 @@ router.get('/add/:product', function (req, res) {
 
 });
 
+router.get('/checkout' , function (req , res) {
+    res.render('checkout' , {
+        title : 'Checkout' ,
+        cart : req.session.cart
+    })
+
+})
 module.exports = router
