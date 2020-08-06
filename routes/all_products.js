@@ -3,9 +3,12 @@ const Products = require('../models/product')
 const Category = require('../models/category')
 const fs = require('fs-extra')
 const e = require('express')
+var auth = require('../config/auth');
+var isUser = auth.isUser;
 
 
-router.get('/' , (req,res)=>{
+
+router.get('/' , isUser,  (req,res)=>{
     Products.find({}).then(found=>{
        
         res.render('all_products' , {products: found})
@@ -35,6 +38,7 @@ router.get('/:category', function (req, res) {
 });
 router.get('/:category/:product' , function(req ,res) {
     var gelleryImage = null ;
+    var loggedIn = (req.isAuthenticated()) ? true:false ;
     Products.findOne({slug: req.params.product} , function (err , product) {
         if (err) {console.log(err);
         }else {
@@ -47,7 +51,8 @@ router.get('/:category/:product' , function(req ,res) {
                     res.render('product' , {
                         title: product.title ,
                         p: product ,
-                        gelleryImage:gelleryImage 
+                        gelleryImage:gelleryImage,
+                        loggedIn : loggedIn
                     })
                 }
             })

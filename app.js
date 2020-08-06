@@ -3,10 +3,12 @@ const path = require('path')
 const mongoose = require('mongoose');
 const config = require('./config/db')
 const session = require('express-session');
+var passport = require('passport');
 mongoose.connect(config.dbKey, {useNewUrlParser: true , useUnifiedTopology: true} );
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
+  
   console.log('connected to db');
   
 });
@@ -43,12 +45,6 @@ app.use(session({
     saveUninitialized: true,
     // cookie: { secure: true }
   }))
-  app.get('*' , function(req ,res , next) {
-    res.locals.cart = req.session.cart ;
-    next() ;
-    
-  })
-  
 
   // setup messages
 app.use(require('connect-flash')());
@@ -56,9 +52,23 @@ app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+app.get('*', function(req,res,next) {
+  res.locals.cart = req.session.cart;
+  console.log(req.session.cart);
+  res.locals.user = req.user || null;
+  console.log(res.locals.user);
+  next();
+});
+
   //Routes
 app.use('/products' , require('./routes/all_products'))
 app.use('/cart' , require('./routes/cart'))
+app.use('/users' , require('./routes/users'))
 app.use('/admin/categories' , require('./routes/admin-category'))
 app.use('/admin/pages' , require('./routes/admin-pages'))
 app.use('/' , require('./routes/pages'))

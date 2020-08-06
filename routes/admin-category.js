@@ -1,12 +1,14 @@
 const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 const Category = require('../models/category')
+var auth = require('../config/auth');
+var isAdmin = auth.isAdmin;
 
 
 let loadData = (data , req)=>{
     req.app.locals.categories = data
 }
-router.get('/' , (req,res)=>{
+router.get('/' , isAdmin, (req,res)=>{
     Category.find(function (err , categories) {
         if (err) return console.log(err);
         res.render('admin/category', {category : categories})
@@ -18,7 +20,7 @@ router.get('/' , (req,res)=>{
     
 })
 // Get add-page
-router.get('/add-category' , (req,res)=>{
+router.get('/add-category' , isAdmin , (req,res)=>{
     var title = "" ;
     
 res.render('admin/add-category' , {
@@ -73,7 +75,7 @@ router.post('/add-category' , [
     })
        
     //get edit page
-    router.get('/edit-category/:id' , (req,res)=>{
+    router.get('/edit-category/:id' ,isAdmin, (req,res)=>{
         Category.findById(req.params.id , function(err , category) {
             if (err) 
             return console.log(err)
@@ -134,7 +136,7 @@ router.post('/edit-category' , [
            })
         }
     })
-        router.get('/delete-category/:id' , (req,res)=>{
+        router.get('/delete-category/:id' ,isAdmin,(req,res)=>{
             Category.findByIdAndRemove(req.params.id , function(err) {
               if (err) return console.log(err);
               req.flash('success' , 'Category Deleted')

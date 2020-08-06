@@ -1,12 +1,14 @@
 const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 const Page = require('../models/Page')
+var auth = require('../config/auth');
+var isAdmin = auth.isAdmin;
 
 
 let loadData = (data , req) =>{
     req.app.locals.pages = data ;
 }
-router.get('/' , (req,res)=>{
+router.get('/' ,isAdmin, (req,res)=>{
     Page.find({}, (err, found) => {
 
         if (err) console.log(err);
@@ -20,7 +22,7 @@ router.get('/' , (req,res)=>{
     })
 })
 // Get add-page
-router.get('/add-page' , (req,res)=>{
+router.get('/add-page' ,isAdmin, (req,res)=>{
     var title = "" ;
     var slug = "" ;
     var content = "";
@@ -107,7 +109,7 @@ router.post('/add-page' , [
     
     })
     //get edit page
-    router.get('/edit-page/:slug' , (req,res)=>{
+    router.get('/edit-page/:slug' ,isAdmin, (req,res)=>{
         Page.findOne({slug: req.params.slug} , function(err , page) {
             if (err) 
             return console.log(err)
@@ -174,7 +176,7 @@ router.post('/add-page' , [
                })
             }
         })
-        router.get('/delete-page/:id' , (req,res)=>{
+        router.get('/delete-page/:id' ,isAdmin, (req,res)=>{
           Page.findByIdAndRemove(req.params.id , function(err) {
               if (err) return console.log(err);
               req.flash('success' , 'Page Deleted')
