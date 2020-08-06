@@ -1,4 +1,4 @@
 module.exports = 
 {
-    dbKey : 'mongodb://localhost/cmscart'
+    dbKey : 'mongodb+srv://fade309:fade309@cluster0-ybpxm.mongodb.net/<dbname>?retryWrites=true&w=majority'
 }

@@ -17,7 +17,7 @@ router.get('/' , isUser,  (req,res)=>{
 
 })
 //get product by category
-router.get('/:category', function (req, res) {
+router.get('/:category',isUser, function (req, res) {
 
     var categorySlug = req.params.category;
 
@@ -36,7 +36,7 @@ router.get('/:category', function (req, res) {
     });
 
 });
-router.get('/:category/:product' , function(req ,res) {
+router.get('/:category/:product' ,isUser, function(req ,res) {
     var gelleryImage = null ;
     var loggedIn = (req.isAuthenticated()) ? true:false ;
     Products.findOne({slug: req.params.product} , function (err , product) {

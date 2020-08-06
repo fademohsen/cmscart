@@ -3,8 +3,7 @@ const Page = require('../models/Page');
 const router = require('express').Router()
 
 router.get('/' , (req,res)=>{
-    var slug = req.params.slug ;
-    Page.findOne({slug: 'home'} , (err , page)=> {
+    Page.findOne({slug:'home'} , (err , page)=> {
         if (err) console.log(err);
             res.render('index' , {
                 title : page.title,
