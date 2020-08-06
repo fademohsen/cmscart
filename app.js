@@ -74,7 +74,7 @@ app.use('/admin/pages' , require('./routes/admin-pages'))
 app.use('/' , require('./routes/pages'))
 app.use('/admin/products' , require('./routes/admin-products.js'))
 
-const PORT = 3000;
+const PORT = 5000;
 
 app.listen(PORT , ()=>{
     console.log('connected to port');
