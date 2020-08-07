@@ -1,8 +1,8 @@
 const express = require('express')
 const path = require('path')
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const config = require('./config/db')
-const session = require('express-session');
+const session = require('cookie-session');
 var passport = require('passport');
 mongoose.connect(config.dbKey, {useNewUrlParser: true , useUnifiedTopology: true} );
 const db = mongoose.connection;
